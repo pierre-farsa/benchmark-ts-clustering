@@ -1,0 +1,99 @@
+# config.yaml
+# auteur : pierre-farsa
+# commenter/décommenter pour désactiver/activer une config et ses hyperparamètres
+
+paths:
+    base_dir: "."
+    data_dir: "data"
+    results_dir: "results"
+   
+settings:
+    merge_train_test: True
+    merge_test_size: 0.2
+    seed: 42
+    verbose: True
+
+datasets:       # (dataset: n_classes)
+    SonyAIBORobotSurface1: 2    # (n_samples: 621, seq_len: 70)
+
+pipelines:
+    rms: {}
+    
+    handcrafted: {}
+    
+    spectrogram:
+        use_pca: True
+        n_components: 32
+    
+    mlp_ae:
+        latent_dim: 32
+        max_epochs: 10  # 100
+        batch_size: 32
+        lr: 0.001
+        val_size: 0.2
+        patience: 15
+        seed: 42
+        accelerator: "auto"
+        num_workers: 0
+        # key word arguments
+        hidden_dims: [128, 64]
+    
+    conv1d_ae:
+        latent_dim: 64
+        max_epochs: 10  # 100
+        batch_size: 32
+        lr: 0.0001
+        val_size: 0.2
+        patience: 15
+        seed: 42
+        accelerator: "auto"
+        num_workers: 0
+        # key word arguments
+        in_channels: 1
+        hidden_dims: [32, 64, 128]
+        kernel_size: 5
+        stride: 2
+        padding: 2
+        output_padding: 1
+        
+    conv2d_ae:
+        latent_dim: 64
+        max_epochs: 10  # 200
+        batch_size: 32
+        lr: 0.0001
+        val_size: 0.2
+        patience: 15
+        seed: 42
+        accelerator: "auto"
+        num_workers: 0
+        # key word arguments
+        in_channels: 1
+        hidden_dims: [16, 32, 64]
+        kernel_size: 3
+        stride: 2
+        padding: 1
+        input_dim: [64, 32]
+    
+    # series2vec:		# GPU NVIDIA obligatoire
+    #     emb_size: 128
+    #     num_heads: 8
+    #     dim_ff: 128
+    #     rep_size: 64
+    #     layers: 3
+    #     dropout: 0.1
+    #     epochs: 100
+    #     batch_size: 16
+    #     lr: 0.0001
+    #     optimizer_name: "Adam"
+    #     seed: 42
+    #     accelerator: "auto"
+
+scalers:
+    - "standard"
+    - "minmax"
+
+clusterings:
+    kmeans: {}
+    gmm: {}
+    hdbscan:
+        min_cluster_size: 5
